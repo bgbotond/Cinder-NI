@@ -480,4 +480,59 @@ ExcOpenNI::ExcOpenNI() throw()
 	sprintf( mMessage, "%s", openni::OpenNI::getExtendedError() );
 }
 
+OniRecorder::OniRecorder( const ci::fs::path &fileName, OniCaptureRef oniCapture )
+{
+	if ( oniCapture->getDepthStreamRef() )
+	{
+		mDepthRecorder = std::shared_ptr< openni::Recorder >( new openni::Recorder );
+		ci::fs::path depthName = fileName;
+		depthName += "_depth.oni";
+		mDepthRecorder->create( depthName.string().c_str() );
+		mDepthRecorder->attach( *oniCapture->getDepthStreamRef() );
+	}
+	if ( oniCapture->getColorStreamRef() )
+	{
+		mColorRecorder = std::shared_ptr< openni::Recorder >( new openni::Recorder );
+		ci::fs::path colorName = fileName;
+		colorName  += "_color.oni";
+		mColorRecorder->create( colorName.string().c_str() );
+		mColorRecorder->attach( *oniCapture->getColorStreamRef() );
+	}
+}
+
+OniRecorder::~OniRecorder()
+{
+	if ( mDepthRecorder )
+	{
+		mDepthRecorder->stop();
+		mDepthRecorder->destroy();
+		mDepthRecorder.reset();
+	}
+
+	if ( mColorRecorder )
+	{
+		mColorRecorder->stop();
+		mColorRecorder->destroy();
+		mColorRecorder.reset();
+	}
+}
+
+void OniRecorder::start()
+{
+	if ( mDepthRecorder )
+		mDepthRecorder->start();
+
+	if ( mColorRecorder )
+		mColorRecorder->start();
+}
+
+void OniRecorder::stop()
+{
+	if ( mDepthRecorder )
+		mDepthRecorder->stop();
+
+	if ( mColorRecorder )
+		mColorRecorder->stop();
+}
+
 } } // namespace mndl::oni

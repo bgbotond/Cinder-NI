@@ -197,4 +197,26 @@ class OniCapture
 	friend class ImageSourceOniColor;
 };
 
+typedef std::shared_ptr< class OniRecorder > OniRecorderRef;
+
+class OniRecorder
+{
+ public:
+	static OniRecorderRef create( const ci::fs::path &fileName, OniCaptureRef oniCapture )
+	{
+		return OniRecorderRef( new OniRecorder( fileName, oniCapture ) );
+	}
+
+	~OniRecorder();
+
+	void start();
+	void stop();
+
+protected:
+	OniRecorder( const ci::fs::path &fileName, OniCaptureRef oniCapture );
+
+	std::shared_ptr< openni::Recorder > mDepthRecorder;
+	std::shared_ptr< openni::Recorder > mColorRecorder;
+};
+
 } } // namespace mndl::oni
