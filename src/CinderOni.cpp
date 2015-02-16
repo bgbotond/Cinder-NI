@@ -327,11 +327,9 @@ OniCapture::OniCapture( const char *deviceUri, const Options &options )
 		throw ExcFailedOpenDevice();
 	}
 
-	// TODO: check the file streams, getSensorInfo does not work
-	/*
 	if ( mDeviceRef->isFile() )
 	{
-		if ( mDeviceRef->getSensorInfo( openni::SENSOR_DEPTH ) == NULL )
+		if ( mDeviceRef->getSensorInfo( openni::SENSOR_DEPTH ) != NULL )
 		{
 			mDepthListener = std::shared_ptr< DepthListener >( new DepthListener( mDeviceRef ) );
 		}
@@ -340,15 +338,16 @@ OniCapture::OniCapture( const char *deviceUri, const Options &options )
 			mColorListener = std::shared_ptr< ColorListener >( new ColorListener( mDeviceRef ) );
 		}
 	}
-	*/
-
-	if ( options.mEnableDepth )
+	else
 	{
-		mDepthListener = std::shared_ptr< DepthListener >( new DepthListener( mDeviceRef ) );
-	}
-	if ( options.mEnableColor )
-	{
-		mColorListener = std::shared_ptr< ColorListener >( new ColorListener( mDeviceRef ) );
+		if ( options.mEnableDepth )
+		{
+			mDepthListener = std::shared_ptr< DepthListener >( new DepthListener( mDeviceRef ) );
+		}
+		if ( options.mEnableColor )
+		{
+			mColorListener = std::shared_ptr< ColorListener >( new ColorListener( mDeviceRef ) );
+		}
 	}
 }
 
