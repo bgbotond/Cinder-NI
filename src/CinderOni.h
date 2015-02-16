@@ -215,8 +215,7 @@ class OniRecorder
 protected:
 	OniRecorder( const ci::fs::path &fileName, OniCaptureRef oniCapture );
 
-	std::shared_ptr< openni::Recorder > mDepthRecorder;
-	std::shared_ptr< openni::Recorder > mColorRecorder;
+	std::shared_ptr< openni::Recorder > mRecorder;
 };
 
 } } // namespace mndl::oni
